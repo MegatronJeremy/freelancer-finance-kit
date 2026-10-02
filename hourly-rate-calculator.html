@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Freelance Hourly Rate Calculator (Effective Rate + Tax Set-Aside)</title>
+<meta name="description" content="Free effective hourly rate calculator for freelancers. Enter your target take-home pay, expenses, tax set-aside and billable hours to see the rate you need to charge. Runs in your browser; nothing is stored.">
+<link rel="canonical" href="hourly-rate-calculator.html">
+<style>
+body{font-family:system-ui,sans-serif;max-width:720px;margin:0 auto;padding:1rem;line-height:1.55;color:#1c2430}
+label{display:block;margin:.8rem 0 .2rem;font-weight:600}
+input{width:100%;padding:.5rem;font-size:1rem;box-sizing:border-box;border:1px solid #9aa5b1;border-radius:6px}
+.result{background:#eef6ff;border:1px solid #b6d4f5;border-radius:8px;padding:1rem;margin:1.2rem 0}
+.big{font-size:2rem;font-weight:700}
+.cta{display:inline-block;background:#1b6ef3;color:#fff;padding:.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600}
+small,.note{color:#566}
+</style>
+</head>
+<body>
+<p><a href="index.html">&larr; Freelancer Finance Kit</a></p>
+<h1>Freelance Hourly Rate Calculator</h1>
+<p>Work out the hourly rate you need to charge to reach your target take-home pay, after business expenses, tax set-aside and unbillable time.</p>
+
+<label for="net">Target yearly take-home pay ($)</label>
+<input id="net" type="number" min="0" value="60000">
+<label for="exp">Yearly business expenses ($): software, equipment, insurance, etc.</label>
+<input id="exp" type="number" min="0" value="6000">
+<label for="tax">Tax set-aside (% of income) <small>your own estimate</small></label>
+<input id="tax" type="number" min="0" max="90" value="25">
+<label for="weeks">Working weeks per year (after holidays, sick days)</label>
+<input id="weeks" type="number" min="1" max="52" value="47">
+<label for="hrs">Working hours per week</label>
+<input id="hrs" type="number" min="1" max="100" value="40">
+<label for="bill">Billable share of your hours (%) <small>admin, sales and email are unbillable</small></label>
+<input id="bill" type="number" min="1" max="100" value="60">
+
+<div class="result" aria-live="polite">
+  <div>Rate you need to charge:</div>
+  <div class="big" id="rate">&ndash;</div>
+  <div id="detail"></div>
+</div>
+
+<p class="note">This is an estimate for planning, not tax or financial advice. Tax rules differ by country and situation; check with a qualified accountant. Calculation runs entirely in your browser and nothing is sent or saved.</p>
+
+<h2>How it works</h2>
+<p>Gross income needed = take-home pay &divide; (1 &minus; tax rate) + expenses. Billable hours = weeks &times; hours per week &times; billable share. Required rate = gross income needed &divide; billable hours. Tax is simplified as one flat percentage of that income, so the real figure will differ.</p>
+<p>Most freelancers find the billable share is the surprise: at 60% billable, a 40-hour week only produces 24 paid hours.</p>
+
+<h2>Want to track your real rate?</h2>
+<p>The <strong>Freelancer Finance Kit</strong> adds an invoice tracker with overdue days, a quarterly income and tax set-aside view, and project profitability showing your actual effective hourly rate against your target.</p>
+<p><a class="cta" href="index.html#buy">See the kit</a></p>
+<p><small>Page content written with AI assistance and reviewed by the studio team.</small></p>
+
+<script>
+(function(){
+  var ids=["net","exp","tax","weeks","hrs","bill"],el={};
+  ids.forEach(function(i){el[i]=document.getElementById(i);el[i].addEventListener("input",calc);});
+  function v(i){var n=parseFloat(el[i].value);return isNaN(n)?0:n;}
+  function money(n){return "$"+n.toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:2});}
+  function calc(){
+    var tax=Math.min(v("tax"),90)/100;
+    var hours=v("weeks")*v("hrs")*Math.min(v("bill"),100)/100;
+    if(hours<=0){document.getElementById("rate").textContent="–";document.getElementById("detail").textContent="Enter weeks, hours and billable share above zero.";return;}
+    var gross=v("net")/(1-tax)+v("exp");
+    var rate=gross/hours;
+    document.getElementById("rate").textContent=money(rate)+" / hour";
+    document.getElementById("detail").textContent="Gross income needed: "+money(gross)+" per year across "+Math.round(hours)+" billable hours. Set aside about "+money(gross*tax)+" per year for tax (estimate).";
+  }
+  calc();
+})();
+</script>
+</body>
+</html>
