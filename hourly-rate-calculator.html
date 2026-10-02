@@ -43,7 +43,8 @@ small,.note{color:#566}
 <p class="note">This is an estimate for planning, not tax or financial advice. Tax rules differ by country and situation; check with a qualified accountant. Calculation runs entirely in your browser and nothing is sent or saved.</p>
 
 <h2>How it works</h2>
-<p>Gross income needed = take-home pay &divide; (1 &minus; tax rate) + expenses. Billable hours = weeks &times; hours per week &times; billable share. Required rate = gross income needed &divide; billable hours. Tax is simplified as one flat percentage of that income, so the real figure will differ.</p>
+<p>Gross income needed = (take-home pay + expenses) &divide; (1 &minus; tax rate). Billable hours = weeks &times; hours per week &times; billable share. Required rate = gross income needed &divide; billable hours. Tax is simplified as one flat percentage of that income, so the real figure will differ. This is the cautious version: it sets tax aside on your expenses too. If your expenses are tax-deductible where you live, your real rate can be a little lower.</p>
+<p>Example: 60,000 take-home, 6,000 expenses, 25% tax, 47 working weeks, 40 hours, 60% billable gives (60,000 + 6,000) &divide; 0.75 = 88,000 over 1,128 billable hours, a minimum of $78.01 an hour.</p>
 <p>Most freelancers find the billable share is the surprise: at 60% billable, a 40-hour week only produces 24 paid hours.</p>
 
 <h2>Want to track your real rate?</h2>
@@ -61,7 +62,7 @@ small,.note{color:#566}
     var tax=Math.min(v("tax"),90)/100;
     var hours=v("weeks")*v("hrs")*Math.min(v("bill"),100)/100;
     if(hours<=0){document.getElementById("rate").textContent="–";document.getElementById("detail").textContent="Enter weeks, hours and billable share above zero.";return;}
-    var gross=v("net")/(1-tax)+v("exp");
+    var gross=(v("net")+v("exp"))/(1-tax);
     var rate=gross/hours;
     document.getElementById("rate").textContent=money(rate)+" / hour";
     document.getElementById("detail").textContent="Gross income needed: "+money(gross)+" per year across "+Math.round(hours)+" billable hours. Set aside about "+money(gross*tax)+" per year for tax (estimate).";
